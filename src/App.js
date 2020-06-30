@@ -34,7 +34,7 @@ function Playlist() {
       "playlist-modify-public",
   
     ];
-    
+
 
   // Get the hash of the url
   const hash = window.location.hash
@@ -126,8 +126,8 @@ function Track({track, onRemove}) {
 function MoodSelector({moods}) {
   return (
     <div style={ {margin: '10px'} }>
-      <h3>Display tracks in your current mood</h3>
-      <p>Select your mood from the list below</p>
+      <h3>Display tracks according to your mood</h3>
+      <p>Select your current mood from the list below</p>
       <select>
         type='radio'
         <option value="chill" selected={moods.chill}> Chill</option>
