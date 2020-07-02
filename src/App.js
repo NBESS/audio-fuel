@@ -1,150 +1,151 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useReducer } from 'react';
+import hash from './hash'
+import { authEndpoint, clientId, redirectUri, scopes } from './config';
 import './App.css';
-import hash from './hash';
-import * as $ from 'jquery';
+import { Playlist } from './components/Playlist';
 import axios from 'axios';
+import Player from './components/Player'
 
+const FETCH_INIT = 'FETCH_INIT';
+const FETCH_SUCCESS = 'FETCH_SUCCESS';
+const FETCH_FAILURE = 'FETCH_FAILURE';
 
-function Playlist() {
-  const [tracks, setTracks] = useState([{ name: '400 Degreez' }])
-  const [newTrack, setNewTrack] = useState('')
-  const [moods, setMoods] = useState([
-    {
-      chill: true
-    },
-    {
-      energized: false
-    },
-    {
-      blue: false
-    },
-  ])
-  const [_token, set_Token] = useState([{ token: null }])
-  
+const initialState = {
+  token: null,
+  item: {},
+  is_playing: 'Paused',
+  progress_ms: 0,
+  no_data: false,
+  is_error: false,
+}
 
-  const authEndpoint = 'https://accounts.spotify.com/authorize';
-  
-    // Replace with your app's client ID, redirect URI and desired scopes
-    const clientId = "6b37770d3e274415b07071b4bc3c6253";
-    const redirectUri = "http://localhost:3000";
-    const scopes = [
-      "user-read-currently-playing",
-      "user-read-playback-state",
-      "user-read-private",
-      "playlist-modify-public",
-  
-    ];
-
-
-  // Get the hash of the url
-  const hash = window.location.hash
-    .substring(1)
-    .split("&")
-    .reduce(function(initial, item) {
-      if (item) {
-        var parts = item.split("=");
-        initial[parts[0]] = decodeURIComponent(parts[1]);
+// Data fetch reducer to manage state during API calls
+function reducer(state, action){
+  switch (action.type) {
+    case FETCH_INIT:
+      return {
+        ...state,
+        token: hash.access_token,
+        no_data: true,
+        is_error: false,
       }
-      return initial;
-    }, {});
-
-    window.location.hash;
-
-  const addTrack = track => setTracks([...tracks, track])
-
-  const removeTrack = i => {
-    setTracks([...tracks.slice(0, i), ...tracks.slice(i + 1)])
+    case FETCH_SUCCESS:
+      return {
+        ...state,
+        token: hash.access_token,
+        item: action.payload.item,
+        is_playing: action.payload.is_playing,
+        progress_ms: action.payload.progress_ms,
+        no_data: false,
+        is_error: false,
+      };
+    case FETCH_FAILURE:
+      return {
+        ...state,
+        no_data: true,
+        is_error: true,
+      }
+    default:
+      throw new Error();
   }
-
-  // const selectMood = i => {
-  //   setMoods(moods.reduce())
-  // }
-
-  // const  handleMoodChange = 
-
-  const handleAddClick = () => {
-    if (newTrack === '') {
-      return;
-    }
-
-    addTrack({ name: newTrack });
-    setNewTrack('')
-  };
-
-    return (
-      <>
-      <div className="App">
-        <header className="App-header">
-        {!this.state.token && (
-          <a
-            className="btn btn--loginApp-link"
-            href={`${authEndpoint}client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join("%20")}&response_type=token&show_dialog=true`}
-          >
-            Login to Spotify
-          </a>
-        )}
-        {this.state.token && (
-          <p></p>// Spotify Player Will Go Here In the Next Step
-        )}
-        </header>
-      </div>
-      <div className="MoodSelector">
-        <h2>What is your current mood?</h2>
-        <MoodSelector moods={moods} />
-      </div>
-      <div className='Tracks'>
-        {tracks.map((track, i) => {
-          return (
-            <Track key={i} track={track} onRemove={() => removeTrack(i)} />
-          )
-        })}
-      </div>
-      <div className='add-tracks'>
-        <label htmlFor="name">Name</label>
-          <input 
-          type="text"
-          id="name" 
-          placeholder="Enter a track"
-          value={newTrack}
-          onChange={e => setNewTrack(e.target.value)}
-        />
-        <button onClick={handleAddClick}>Add a track</button>
-      </div>
-      </>
-    );
 }
 
-function Track({track, onRemove}) {
-  return (
-    <div className="Track" style={{margin: '10px'}}>
-      <span>{track.name}</span>
-      <button onClick={onRemove}>Remove</button>
-    </div>
-  )
-}
-
-function MoodSelector({moods}) {
-  return (
-    <div style={ {margin: '10px'} }>
-      <h3>Display tracks according to your mood</h3>
-      <p>Select your current mood from the list below</p>
-      <select>
-        type='radio'
-        <option value="chill" selected={moods.chill}> Chill</option>
-        type='radio'
-        <option value="energized" selected={moods.energized}> Energized</option>
-        type='radio'
-        <option value="blue" selected={moods.blue}> Blue</option>
-      </select>
-    </div>
-  )
-}
-
+// Set initial state
 function App() {
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  // Handles state during axios requests
+  useEffect(() => {
+    let didCancel = false;
+    const apiUrl = "https://api.spotify.com/v1/me/player";
+    const fetchData = async () => {
+
+      dispatch({ type: FETCH_INIT });
+
+      try {
+        // Make a call using the token
+        const result = await axios.get(apiUrl, {
+          headers: { "Authorization": "Bearer " + state.token },
+          timeout: 5000
+        });
+
+        if (!didCancel) {
+          dispatch({
+            type: FETCH_SUCCESS, payload: {
+              item: result.data.item,
+              is_playing: result.data.is_playing,
+              progress_ms: result.data.progress_ms,
+            }
+          })
+          console.log(result.data)
+        }
+      } catch (error) {
+        if (!didCancel) {
+          dispatch({ type: FETCH_FAILURE });
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      didCancel = true;
+    };
+  }, [state.token]);
+
+  //   const tick = () => {
+  //     if (token) {
+  //       getCurrentlyPlaying(token)
+  //     }
+  //   }
+  //   const interval = setInterval(() => tick, 5000)
+  //   return () => {
+  //     clearInterval(interval)
+  //   }
+
+  // }, [_token, tick, interval ])
+
+  // this.setState({
+  //   item: data.item,
+  //   is_playing: data.is_playing,
+  //   progress_ms: data.progress_ms,
+  //   no_data: false /* We need to "reset" the boolean, in case the
+  //                     user does not give F5 and has opened his Spotify. */
+  // });
+
+
   return (
     <div className="App">
       <h1>Welcome to AudioFuel</h1>
-      <Playlist />
+      <div className="App">
+        <header className="App-header">
+          <p></p>
+          {!state.token && (
+            <a
+              className="btn btn--loginApp-link"
+              href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
+                "%20"
+              )}&response_type=token&show_dialog=true`}
+            >
+              Login to Spotify
+            </a>
+          )}
+          {state.token && !state.no_data && (
+            <Player
+              item={state.item}
+              is_playing={state.is_playing}
+              progress_ms={state.progress_ms}
+            />
+          )}
+          {state.no_data && (
+            <p>
+              You need to be playing a song on Spotify, for something to appear here.
+            </p>
+          )}
+          {state.is_error && <div>Something went wrong during authorization</div>}
+        </header>
+      </div>
+      <Playlist item={state.item} />
     </div>
   );
 }
