@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import hash from './hash'
 import { authEndpoint, clientId, redirectUri, scopes } from './config';
 import './App.css';
@@ -10,6 +10,8 @@ const FETCH_INIT = 'FETCH_INIT';
 const FETCH_SUCCESS = 'FETCH_SUCCESS';
 const FETCH_FAILURE = 'FETCH_FAILURE';
 
+
+
 const initialState = {
   token: null,
   item: {},
@@ -20,7 +22,7 @@ const initialState = {
 }
 
 // Data fetch reducer to manage state during API calls
-function reducer(state, action){
+function reducer(state, action) {
   switch (action.type) {
     case FETCH_INIT:
       return {
@@ -57,7 +59,9 @@ function App() {
   // Handles state during axios requests
   useEffect(() => {
     let didCancel = false;
-    const apiUrl = "https://api.spotify.com/v1/me/player";
+    const playerEndpoint = 'me/player';
+    const apiUrl = `https://api.spotify.com/v1/${playerEndpoint}`;
+
     const fetchData = async () => {
 
       dispatch({ type: FETCH_INIT });
@@ -77,7 +81,10 @@ function App() {
               progress_ms: result.data.progress_ms,
             }
           })
+          // set interval for polling every 5 seconds
+          setInterval(() => result.data, 5000);
           console.log(result.data)
+          
         }
       } catch (error) {
         if (!didCancel) {
@@ -89,36 +96,18 @@ function App() {
     fetchData();
 
     return () => {
+      clearInterval(setInterval(() => state.token, 5000))
       didCancel = true;
     };
   }, [state.token]);
 
-  //   const tick = () => {
-  //     if (token) {
-  //       getCurrentlyPlaying(token)
-  //     }
-  //   }
-  //   const interval = setInterval(() => tick, 5000)
-  //   return () => {
-  //     clearInterval(interval)
-  //   }
-
-  // }, [_token, tick, interval ])
-
-  // this.setState({
-  //   item: data.item,
-  //   is_playing: data.is_playing,
-  //   progress_ms: data.progress_ms,
-  //   no_data: false /* We need to "reset" the boolean, in case the
-  //                     user does not give F5 and has opened his Spotify. */
-  // });
 
 
   return (
     <div className="App">
       <h1>Welcome to AudioFuel</h1>
-      <div className="App">
-        <header className="App-header">
+      <div className="App"> 
+        <header className="App-header" style={{ backgroundImage: 'url(./resources/unfocused-night-lights.jpg)', backgroundRepeat: 'no-repeat' }}>
           <p></p>
           {!state.token && (
             <a

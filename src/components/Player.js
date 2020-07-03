@@ -14,7 +14,7 @@ export default function Player({ item, is_playing, progress_ms }) {
 
     return (
         <div className="App">
-            <div className="main-wrapper">
+            <div className="main-wrapper"  >
                 <div className="now-playing__img">
                     <img src={item.album.images[0].url} alt="currently playing album cover"/>
                 </div>
