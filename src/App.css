@@ -1,11 +1,50 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+/* Responsive grid */
+
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
   pointer-events: none;
+}
+
+.header {
+  background-color: rgba(40, 44, 52, .3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 10vh;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.header > h1 {
+  margin: 0;
 }
 
 .App-header {
@@ -32,15 +71,6 @@
   }
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  height: 100%;
-}
 
 body {
   /* background-color: #333; */
@@ -48,6 +78,7 @@ body {
   color: #eee;
   font-family: Helvetica, Arial;
   font-size: 3vmin;
+  background-size: cover;
 }
 
 .hidden {
@@ -66,6 +97,12 @@ body {
   padding: 0.7em 1.5em;
   text-transform: uppercase;
   transition: all 0.25s ease;
+  align-self: center;
+}
+
+a.btn {
+
+  display: block;
 }
 
 .btn:hover {
@@ -77,37 +114,100 @@ body {
   margin: 0 auto;
 }
 
-/** Background **/
+/*  Playlist Area */
 
-.background {
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background-size: cover;
-  background-position: center center;
-  filter: blur(8em) opacity(0.6);
-  position: absolute;
-}
-
-.main-wrapper {
-  align-items: center;
+.playlist-wrapper {
+  /* min-width: 500px; */
   display: flex;
+  flex-direction: column;
   height: 100%;
-  margin: 0 auto;
-  justify-content: center;
-  position: relative;
-  width: 80%;
-  z-index: 1;
+  align-self: center;
+}
+.playlist-window {
+  padding: 10px;
+  /* min-width: 500px; */
+  height: 60vh;
+  overflow: hidden;
+  border: 2px ridge rgba(156, 147, 147, 0.5);
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  align-self: center;
+  background-color:rgb(24, 23, 23);
 }
 
-.container {
-  align-items: center;
+.playlist-window::-webkit-scrollbar {
+  display: none;
+}
+
+
+.playlist-name {
+  align-self: flex-start;
+}
+
+.playlist-name > h3 {
+  padding: 0;
+  margin: 0;
+}
+
+.track-count {
+  align-self: flex-start;
+  /* border: 1px solid red; */
+  padding: 2px;
+  font-size: x-small;
+}
+
+.song-title {
+  font-weight: bolder;
+  font-size: small;
+  overflow: auto;
+}
+
+.artist-name {
+  font-size: x-small;
+  font-weight: lighter;
+}
+
+caption {
+  display: table-caption;
+  text-align: center;
+}
+
+.cover-art {
+  height: 50px;
+  width: 50px;
+}
+
+.song-info {
   display: flex;
-  justify-content: center;
-  height: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+  
 }
 
-.main-container {
-  flex: 1;
+@media only screen and (min-width: 600px) {
+  /* For tablets: */
+  .playlist-window {
+    width: 500px;
+  }
+
+  .btn {
+    align-self: center;
+    min-width: 33.33%;
+  }
+}
+
+
+@media only screen and (max-width: 599.98px) {
+  /* For mobile phones: */
+  .playlist-window {
+    width: calc(100vw - 20px);
+    max-width: 500px;
+  }
+
+  .btn {
+    align-self: center;
+    min-width: 33.33%;
+  }
 }

@@ -2,9 +2,9 @@ import React, { useEffect, useReducer } from 'react';
 import hash from './hash'
 import { authEndpoint, clientId, redirectUri, scopes } from './config';
 import './App.css';
-import { Playlist } from './components/Playlist';
+// import { Playlist } from './components/Playlist';
 import axios from 'axios';
-import Player from './components/Player'
+// import Player from './components/Player'
 
 const FETCH_INIT = 'FETCH_INIT';
 const FETCH_SUCCESS = 'FETCH_SUCCESS';
@@ -36,8 +36,8 @@ function reducer(state, action) {
         ...state,
         token: hash.access_token,
         item: action.payload.item,
-        is_playing: action.payload.is_playing,
-        progress_ms: action.payload.progress_ms,
+        is_playing: false, // action.payload.is_playing,
+        progress_ms: 0,// action.payload.progress_ms,
         no_data: false,
         is_error: false,
       };
@@ -52,6 +52,8 @@ function reducer(state, action) {
   }
 }
 
+
+
 // Set initial state
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -59,8 +61,8 @@ function App() {
   // Handles state during axios requests
   useEffect(() => {
     let didCancel = false;
-    const playerEndpoint = 'me/player';
-    const apiUrl = `https://api.spotify.com/v1/${playerEndpoint}`;
+    // const playlistEndpoint = 'playlists/37i9dQZF1DXbYM3nMM0oPk';
+    const apiUrl = `https://api.spotify.com/v1/${playlistEndpoint}`;
 
     const fetchData = async () => {
 
@@ -76,15 +78,9 @@ function App() {
         if (!didCancel) {
           dispatch({
             type: FETCH_SUCCESS, payload: {
-              item: result.data.item,
-              is_playing: result.data.is_playing,
-              progress_ms: result.data.progress_ms,
+              item: result.data, 
             }
           })
-          // set interval for polling every 5 seconds
-          setInterval(() => result.data, 5000);
-          console.log(result.data)
-          
         }
       } catch (error) {
         if (!didCancel) {
@@ -96,7 +92,6 @@ function App() {
     fetchData();
 
     return () => {
-      clearInterval(setInterval(() => state.token, 5000))
       didCancel = true;
     };
   }, [state.token]);
@@ -104,38 +99,67 @@ function App() {
 
 
   return (
-    <div className="App">
-      <h1>Welcome to AudioFuel</h1>
-      <div className="App"> 
-        <header className="App-header" style={{ backgroundImage: 'url(./resources/unfocused-night-lights.jpg)', backgroundRepeat: 'no-repeat' }}>
-          <p></p>
-          {!state.token && (
-            <a
-              className="btn btn--loginApp-link"
-              href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-                "%20"
-              )}&response_type=token&show_dialog=true`}
-            >
-              Login to Spotify
-            </a>
-          )}
-          {state.token && !state.no_data && (
-            <Player
-              item={state.item}
-              is_playing={state.is_playing}
-              progress_ms={state.progress_ms}
-            />
-          )}
-          {state.no_data && (
-            <p>
-              You need to be playing a song on Spotify, for something to appear here.
-            </p>
-          )}
-          {state.is_error && <div>Something went wrong during authorization</div>}
-        </header>
+    <div >
+      <div className="header"><h1>AudioFuel</h1></div>
+      <div className="App">
+        {/* <header className="App-header"> */}
+        <p></p>
+        {!state.token && (
+          <a
+            className="btn btn--loginApp-link col-6"
+            href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
+              "%20"
+            )}&response_type=token&show_dialog=true`}
+          >
+            Login to Spotify
+          </a>
+        )}
+        {state.token && !state.no_data && (
+          //   <Player
+          //     item={state.item}
+          //     // is_playing={state.is_playing}
+          //     // progress_ms={state.progress_ms}
+          //   />
+          // )}
+          <>
+            <div className='playlist-wrapper'>
+              <div className='playlist-name'><h3>{state.item.name}</h3></div>
+              <div className='track-count'>Tracks: {state.item.tracks.total}</div>
+              <div className='playlist-window col-4'>
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {state.item.tracks.items.map((track, i) => {
+                      const { name, album, artists } = track.track;
+                      return (
+
+                        <tr key={i} className='playlist-border'>
+                          <td><img className='cover-art' src={album.images[0].url} alt='cover art' /></td>
+                          <td className='song-info'><div className='song-title'>{name}</div><div className='artist-name'>{artists[0].name}</div></td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
+        {state.no_data && (
+          <p>
+            You need to be playing a song on Spotify, for something to appear here.
+          </p>
+        )}
+        {state.is_error && <div>Something went wrong during authorization</div>}
+        {/* </header> */}
       </div>
-      <Playlist item={state.item} />
-    </div>
+      {/* <Playlist item={state.item} /> */}
+    </div >
   );
 }
 

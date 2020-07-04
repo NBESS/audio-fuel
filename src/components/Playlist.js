@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 
-export function Playlist() {
+export function Playlist({item}) {
 
-    const [tracks, setTracks] = useState([{ name: '400 Degreez' }])
+    // const [tracks, setTracks] = useState([{ name: '400 Degreez' }])
     const [newTrack, setNewTrack] = useState('')
     const [moods, setMoods] = useState([
         {
@@ -34,11 +34,11 @@ export function Playlist() {
     //   setToken({ token: hash.access_token });
     // })
 
-    const addTrack = track => setTracks([...tracks, track])
+    // const addTrack = track => setTracks([...tracks, track])
 
-    const removeTrack = i => {
-        setTracks([...tracks.slice(0, i), ...tracks.slice(i + 1)])
-    }
+    // const removeTrack = i => {
+    //     setTracks([...tracks.slice(0, i), ...tracks.slice(i + 1)])
+    // }
 
     // const selectMood = i => {
     //   setMoods(moods.reduce())
@@ -46,15 +46,15 @@ export function Playlist() {
 
     // const  handleMoodChange = 
 
-    const handleAddClick = () => {
-        if (newTrack === '') {
-            return;
-        }
+    // const handleAddClick = () => {
+    //     if (newTrack === '') {
+    //         return;
+    //     }
 
-        addTrack({ name: newTrack });
-        setNewTrack('')
-    };
-
+    //     addTrack({ name: newTrack });
+    //     setNewTrack('')
+    // };
+    
     return (
         <>
             <div className="MoodSelector">
@@ -62,11 +62,12 @@ export function Playlist() {
                 <MoodSelector moods={moods} />
             </div>
             <div className='Tracks'>
-                {tracks.map((track, i) => {
+                {/* {item.map((track, i) => {
                     return (
-                        <Track key={i} track={track} onRemove={() => removeTrack(i)} />
+                        <Track key={i} track={track.name} /> //onRemove={() => removeTrack(i)}
                     )
-                })}
+                })} */}
+                Test
             </div>
             <div className='add-tracks'>
                 <label htmlFor="name">Name</label>
@@ -77,20 +78,20 @@ export function Playlist() {
                     value={newTrack}
                     onChange={e => setNewTrack(e.target.value)}
                 />
-                <button onClick={handleAddClick}>Add a track</button>
+                {/* <button onClick={handleAddClick}>Add a track</button> */}
             </div>
         </>
     );
 }
 
-function Track({ track, onRemove }) {
-    return (
-        <div className="Track" style={{ margin: '10px' }}>
-            <span>{track.name}</span>
-            <button onClick={onRemove}>Remove</button>
-        </div>
-    )
-}
+// function Track({ track }) { // onRemove 
+//     return (
+//         <div className="Track" style={{ margin: '10px' }}>
+//             <span>{track.name}</span>
+//             {/* <button onClick={onRemove}>Remove</button> */}
+//         </div>
+//     )
+// }
 
 function MoodSelector({ moods }) {
     return (
