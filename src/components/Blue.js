@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 
 
@@ -23,6 +24,7 @@ export default function Blue() {
                 <div id="37i9dQZF1DWSqBruwoIXkA" className="playlist-cover" style={{display: 'inline-block'}} ><img style={coverStyles} src="https://i.scdn.co/image/ab67706f00000002a25dc8af8a2938dbcd47114a" height={200} alt="cover" /></div>
                 <div id="37i9dQZF1DX7gIoKXt0gmx" className="playlist-cover" style={{display: 'inline-block'}} ><img style={coverStyles} src="https://i.scdn.co/image/ab67706f0000000213601d4833623a4d6b328e38" height={200} alt="cover" /></div>
             </div>
+            <div><Link to='/'>Home</Link></div>
         </>
     )
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 export default function Energized() {
     const coverStyles = {
@@ -20,6 +21,7 @@ export default function Energized() {
                 <div id="37i9dQZF1DX4eRPd9frC1m" className="playlist-cover" style={{display: 'inline-block'}} ><img style={coverStyles} src="https://i.scdn.co/image/ab67706f00000002122921a072ad2ca9ce90a456" height={200} alt="cover" /></div>
                 <div id="37i9dQZF1DX8CwbNGNKurt" className="playlist-cover" style={{display: 'inline-block'}} ><img style={coverStyles} src="https://i.scdn.co/image/ab67706f000000023457ebc8f98b67b6df4c4f10" height={200} alt="cover" /></div>
             </div>
+            <div><Link to='/'>Home</Link></div>
         </>
     )
 }

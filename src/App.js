@@ -16,7 +16,7 @@ function App() {
   return (
     <Router>
       <div className="header">
-        <h1><Link to='/'>AudioFuel</Link></h1>
+        <h1>AudioFuel</h1>
         <nav className="mood-nav">
           <ul className="mood-list">
             <li className="mood-item mood-chill"><Link to='/chill'>Chill</Link></li>

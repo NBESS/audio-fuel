@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 
 
@@ -25,6 +26,7 @@ export default function Chill({playlistId, item, handlePlaylistChange}) {
                 <div className="playlist-cover" style={{display: 'inline-block'}} ><a href='#' onClick={handlePlaylistChange}><img id="37i9dQZF1DX6ziVCJnEm59" style={coverStyles} src="https://i.scdn.co/image/ab67706f000000025ae7aa0454c9eafdd6505fda" height={200} alt="cover" /></a></div>
             </div>
             <div className='track-list'></div>
+            <div><Link to='/'>Home</Link></div>
         </>
     )
 }

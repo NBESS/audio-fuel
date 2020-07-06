@@ -4,7 +4,6 @@ import axios from 'axios';
 import hash from '../hash';
 import Chill from './Chill';
 import '../App.css';
-import { Link } from 'react-router-dom';
 
 export const FETCH_INIT = 'FETCH_INIT';
 export const FETCH_SUCCESS = 'FETCH_SUCCESS';
@@ -60,11 +59,11 @@ const useSpotifyApi = (initialUrl, initialItem) => {
         is_loading: true,
     })
 
-    const doFetch = (data)=> {
+    const doFetch = (data) => {
         setUrl(data)
-        
+
     }
-    // Effect Hookk to track url changes
+    // Effect Hook to track url changes
     useEffect(() => {
         let didCancel = false;  // Sets condition for aborting fetch
         const fetchData = async () => {
@@ -121,7 +120,7 @@ export function Playlist() {
                     <p>Click on a link in the list above then select a playlist below to view its track list
             </p>
                     {!token && (
-                        <a style={{alignSelf: 'center'}}
+                        <a
                             className="btn btn--loginApp-link col-6"
                             href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
                                 "%20"
@@ -136,7 +135,7 @@ export function Playlist() {
 
                     {token && !no_data && item && (
                         <>
-                        <Chill handlePlaylistChange={handlePlaylistChange} />
+                            <Chill handlePlaylistChange={handlePlaylistChange} />
 
                             <div className='playlist-wrapper'>
                                 <div className='playlist-name'><h3>{item.name}</h3></div>
@@ -166,7 +165,7 @@ export function Playlist() {
                             </div>
                         </>
                     )}
-                    {is_error && <div>Something went wrong during authorization</div>}
+                    {is_error && <div style={{ marginTop: '50px' }}>Something went wrong during authorization</div>}
                 </div>
             </div >
         </>
