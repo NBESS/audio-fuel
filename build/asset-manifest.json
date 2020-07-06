@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.870f1c2f.chunk.css",
+    "main.js": "/static/js/main.7b717e2f.chunk.js",
+    "main.js.map": "/static/js/main.7b717e2f.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.a317f607.js",
+    "runtime-main.js.map": "/static/js/runtime-main.a317f607.js.map",
+    "static/js/2.ecf4d6a3.chunk.js": "/static/js/2.ecf4d6a3.chunk.js",
+    "static/js/2.ecf4d6a3.chunk.js.map": "/static/js/2.ecf4d6a3.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.f0eefd70131cdb2a4adad29bd77cfc11.js": "/precache-manifest.f0eefd70131cdb2a4adad29bd77cfc11.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.870f1c2f.chunk.css.map": "/static/css/main.870f1c2f.chunk.css.map",
+    "static/js/2.ecf4d6a3.chunk.js.LICENSE.txt": "/static/js/2.ecf4d6a3.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/static/media/unfocused-night-lights.9d320214.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a317f607.js",
+    "static/js/2.ecf4d6a3.chunk.js",
+    "static/css/main.870f1c2f.chunk.css",
+    "static/js/main.7b717e2f.chunk.js"
+  ]
+}
